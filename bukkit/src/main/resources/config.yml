@@ -1,0 +1,8 @@
+# The amount of seconds to wait, after the last player left the
+# server, before shutting down the server.
+# If any players join's the server again within this time, the
+# server won't be shut down.
+shutdown_delay_seconds: 300
+
+# Does what it says
+disable_logging: false
