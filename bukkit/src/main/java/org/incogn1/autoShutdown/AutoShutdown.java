@@ -10,48 +10,67 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 
 public final class AutoShutdown extends JavaPlugin implements Listener {
-    FileConfiguration config = this.getConfig();
-    BukkitTask shutdownTask;
+    private BukkitTask shutdownTask;
+
+    private long shutdownDelayTicks;
+    private boolean loggingEnabled;
 
     @Override
     public void onEnable() {
+        FileConfiguration config = this.getConfig();
+
+        config.addDefault("initial_delay_seconds", 60L);
         config.addDefault("shutdown_delay_seconds", 300L);
-        config.addDefault("disable_logging", false);
+        config.addDefault("enable_logging", true);
         config.options().copyDefaults(true);
         saveDefaultConfig();
 
+        long initialDelayTicks = 20 * config.getLong("initial_delay_seconds");
+        this.shutdownDelayTicks = 20 * config.getLong("shutdown_delay_seconds");
+        this.loggingEnabled = config.getBoolean("enable_logging");
+
         getServer().getPluginManager().registerEvents(this, this);
+
+        Bukkit.getScheduler().runTaskLater(this, this::doAbandonedServerCheck, initialDelayTicks);
     }
 
     @EventHandler
     public void onPlayerLeave(PlayerQuitEvent event) {
-
         // Run as task to make sure player has been removed from online players list
-        shutdownTask = Bukkit.getScheduler().runTask(this, () -> {
-            if (!getServer().getOnlinePlayers().isEmpty()) return;
-            long delaySeconds = config.getLong("shutdown_delay_seconds");
-            long delayTicks = 20L * delaySeconds; // 20 ticks = 1 sec
-
-            if (!config.getBoolean("disable_logging")) {
-                Bukkit.getLogger().info("No more players online. Waiting for " + delaySeconds + " seconds before shutting down the server.");
-            }
-
-            // Schedule shutdown task
-            shutdownTask = Bukkit.getScheduler().runTaskLater(this, () -> {
-                if (!getServer().getOnlinePlayers().isEmpty()) return;
-                Bukkit.shutdown();
-            }, delayTicks);
-        });
+        Bukkit.getScheduler().runTask(this, this::doAbandonedServerCheck);
     }
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
-        if (shutdownTask != null) {
-            if (!config.getBoolean("disable_logging")) {
-                Bukkit.getLogger().info("Shutdown process cancelled because a player joined the server within the specified delay.");
-            }
+        if (shutdownTask == null) return;
 
-            shutdownTask.cancel();
+        if (this.loggingEnabled) {
+            Bukkit.getLogger().info("Shutdown process cancelled because a player joined the server within the specified delay.");
         }
+
+        cancelShutdownTask();
+    }
+
+    private void doAbandonedServerCheck() {
+        if (!getServer().getOnlinePlayers().isEmpty()) return;
+
+        // Schedule shutdown task
+        scheduleShutdownTask();
+    }
+
+    private void scheduleShutdownTask() {
+        if (this.loggingEnabled) {
+            Bukkit.getLogger().info("No more players online. Waiting for " + this.shutdownDelayTicks / 20 + " seconds before shutting down the server.");
+        }
+
+        shutdownTask = Bukkit.getScheduler().runTaskLater(this, () -> {
+            if (!getServer().getOnlinePlayers().isEmpty()) return;
+            Bukkit.shutdown();
+        }, this.shutdownDelayTicks);
+    }
+
+    private void cancelShutdownTask() {
+        shutdownTask.cancel();
+        shutdownTask = null;
     }
 }

@@ -1,3 +1,7 @@
+# Initial delay in seconds before checking if there are
+# players online (to give players time to join the server)
+initial_delay_seconds: 60
+
 # The amount of seconds to wait, after the last player left the
 # server, before shutting down the server.
 # If any players join's the server again within this time, the
@@ -5,4 +9,4 @@
 shutdown_delay_seconds: 300
 
 # Does what it says
-disable_logging: false
+enable_logging: true
