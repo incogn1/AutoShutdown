@@ -3,7 +3,7 @@
 	"id": "autoshutdown",
 	"version": "${version}",
 	"name": "AutoShutdown",
-	"description": "This is an example description! Tell everyone what your mod is about!",
+	"description": "Automatically shuts down your server once no players have been online for a while.",
 	"authors": [
 		"Incogn1"
 	],
