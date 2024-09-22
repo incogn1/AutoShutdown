@@ -32,14 +32,6 @@ public class AutoShutdown implements ModInitializer {
 		this.pollingDelayMillis = config.getDelays().getPolling() * 1000L;
 		this.shutdownDelayMillis = config.getDelays().getShutdown() * 1000L;
 
-//		this.loggingEnabled = true;
-//
-//		this.initialDelayMillis = 2 * 1000L;
-//		this.pollingDelayMillis = 1 * 1000L;
-//		this.shutdownDelayMillis = 5 * 1000L;
-//
-//		this.inDelayedShutdownProcess = false;
-
 		ServerLifecycleEvents.SERVER_STARTED.register(this::onServerStarted);
 		ServerTickEvents.START_SERVER_TICK.register(this::onServerTick);
 	}
