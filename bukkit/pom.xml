@@ -6,7 +6,7 @@
 
   <groupId>org.incogn1</groupId>
   <artifactId>AutoShutdown</artifactId>
-  <version>bukkit-1.0.0</version>
+  <version>bukkit-1.0.1</version>
   <packaging>jar</packaging>
 
   <name>AutoShutdown</name>
@@ -17,7 +17,7 @@
   </properties>
 
   <build>
-    <finalName>test test</finalName>
+    <finalName>AutoShutdown</finalName>
     <defaultGoal>clean package</defaultGoal>
     <plugins>
       <plugin>
