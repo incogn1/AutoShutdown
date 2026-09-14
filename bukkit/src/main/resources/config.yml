@@ -8,5 +8,15 @@ initial_delay_seconds: 60
 # server won't be shut down.
 shutdown_delay_seconds: 300
 
-# Does what it says
+# Boolean to determine if the there is a timeframe that will govern 
+# if the server will shut itself down during if there is no activity.
+# If enabled the server will only shutdown automatically during this timeframe.
+timeframe_enabled: false
+
+# Timeframe is in UTC, a conversion to your local time zone will need to be applied.
+# For example for 12:00am EST you would enter 04:00.
+start_time: '00:0'
+end_time: '08:00'
+
+# Displays logging information in console
 enable_logging: true

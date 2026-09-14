@@ -1,5 +1,5 @@
 name: AutoShutdown
-version: '1.0.0'
+version: '1.0.1'
 main: org.incogn1.autoShutdown.AutoShutdown
 description: 'Automatically shuts down your server once no players have been online for a while.'
 author: Incogn1
